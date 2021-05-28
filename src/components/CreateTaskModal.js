@@ -1,97 +1,55 @@
-import React from 'react'
-import Styled from 'styled-components'
-import { MdClose } from 'react-icons/md'
+import React, { useState } from 'react'
+import DatePicker from 'react-datepicker'
+import { Container, Form, ListGroup } from 'react-bootstrap'
+import "react-datepicker/dist/react-datepicker.css";
+import "../ModalStyle.css"
 
-const CloseButton = Styled(MdClose)`
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-`
-const CloseBtnContainer = Styled.div`
-    display: flex;
-    flex-direction: row-reverse;
-`
-const NewTaskTitleContainer = Styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px;
-    margin-bottom: 10px;
-`
-const TextField = Styled.input`
-    width: 55%;
-    height: 35px;
-    border: none;
-    border-radius: 10px;
-    background-color: white;
-    text-align: center;
-    color: grey;
-    font-size: x-large;
-`
+const usernames = ['Abdullah Baher', 'Salah Mostafa', 'Shehab Khalid', 'Ahmed Salama', 'Mohamed Hatem', 'Ali Adel'];
 
-const SaveBtnContainer = Styled.div`
-    display: flex;
-    flex-direction: column-reverse;
-    align-items: center;
-    padding: 5px;
-    margin-bottom: 10px;
-    flex-grow: 1;
+const CreateTaskModal = () => {
     
-`
-const SaveTaskBtn = Styled.button`
-    border: none;
-    border-radius: 10px;
-    height: 40px;
-    width:  30%;
-    background-color: #007bff;
-    font-size: x-large;
-    color: white;
-    text-align: center;
-`
-const ModalContainer = Styled.div`
-    display: flex;
-    height: 100%;
-    flex-direction: column;
-`
-const CreateTaskModal = ({ toogleModal, addNewTask, columnId, data }) => {
-    const saveTask = () => {
-        const tasktitle = document.getElementById('task-title').value
-        const taskdescription = document.getElementById('task-description').value
-        if(!tasktitle || !taskdescription){
-            toogleModal()
-            return
+    const [ selectedDate, setSelectedDate ] = useState(new Date());
+
+
+    const listItemClick = (e) => {
+        const checkbox = e.target.getElementsByClassName('form-check-input')[0];
+        if(checkbox){
+            checkbox.checked = !checkbox.checked;
         }
-        const task = {
-            'title': tasktitle,
-            'description': taskdescription
-        }
-        addNewTask(columnId, task)
-        toogleModal()
     }
+
     return (
-        <ModalContainer>
-            <CloseBtnContainer>
-               <CloseButton onClick={toogleModal} />
-            </CloseBtnContainer>
-            <NewTaskTitleContainer>
-                <h1>New Task Title:</h1>
-                <TextField placeholder='Enter Task Title' id='task-title' value={data ? data.title : undefined}></TextField>
-            </NewTaskTitleContainer>
-            <NewTaskTitleContainer>
-                <h1>New Task Description:</h1>
-                <TextField placeholder='Enter Task Description' id='task-description' value={data ? data.description : undefined}></TextField>
-            </NewTaskTitleContainer>
+        <Container fluid>
+            <Form.Group controlId="BasicTaskTitle">
+                <Form.Label style={{fontSize: '20px'}}>Task Title</Form.Label>
+                <Form.Control type="text" size="lg" id='task-title' placeholder='Enter Task Title' required />
+                <Form.Text className="text-muted">Task title should not be more than three words</Form.Text>
+            </Form.Group>
+
+            <Form.Group controlId="BasicTaskDescription">
+                <Form.Label style={{fontSize: '20px'}}>Task Description</Form.Label>
+                <Form.Control type="text" size="lg" id='task-description' placeholder='Enter Task Description' required />    
+            </Form.Group>
+
+            <Form.Group controlId="BasicTaskDeadline">
+                <Form.Label style={{fontSize: '20px'}}>Task Deadline</Form.Label>
+                <DatePicker wrapperClassName='datePicker' id='deadline' selected={selectedDate} onChange={date => setSelectedDate(date)} required />
+            </Form.Group>
             
-            {
-                data ?
-                null :
-                <SaveBtnContainer>
-                    <SaveTaskBtn onClick={saveTask}>Save</SaveTaskBtn>
-                </SaveBtnContainer>
-            }
-            
-        </ModalContainer>
+            <Form.Group controlId="BasicTaskMembers">
+                <Form.Label style={{fontSize: '20px'}}>Task Members</Form.Label> 
+                <ListGroup>
+                    {   
+                        usernames.map((val, idx) => <ListGroup.Item style={{height: '55px'}} onClick={listItemClick}>
+                            <Form.Check label={val}  
+                            name="usersList"
+                            id={"user" + (idx + 1).toString()}/>
+                        </ListGroup.Item>)
+                    }
+                </ListGroup>
+            </Form.Group>
+        </Container>
+           
     )
 }
 
