@@ -95,16 +95,44 @@ const Task = ({ task, index }) => {
 
     const saveTaskChangesClick = () => {
         const taskTitle = document.getElementById('task-title').value.trim();
-        const taskDescription = document.getElementById('task-description').value.trim();
-        const deadline = document.getElementById('deadline').value.trim();
+        const tasktitleError = document.getElementById('task-title-error');
         
+        if(!taskTitle){
+            tasktitleError.innerText = 'Please provide a Title';
+        } else {
+            tasktitleError.innerText = '';
+        }
+
+        const taskDescription = document.getElementById('task-description').value.trim();
+        const taskdescriptionerror = document.getElementById('task-description-error');
+
+        if(!taskDescription){
+            taskdescriptionerror.innerHTML = 'Please provide a Description'
+        } else {
+            taskdescriptionerror.innerText = '';
+        }
+
+        const deadline = document.getElementById('deadline').value.trim();
+        const deadlineError = document.getElementById('deadline-error');
         const date = new Date(deadline);
         date.setHours(0, 0, 0, 0);
         const todayDate = new Date();
         todayDate.setHours(0, 0, 0, 0);
 
+        if(!deadline){
+            deadlineError.innerText = 'Please provide a Deadline';
+        } 
+    
+        else if(date.getTime() < todayDate.getTime()){
+            deadlineError.innerText = 'Task deadline can not be before today';
+        }
+
+        else {
+            deadlineError.innerText = '';
+        }
+
         const checkboxes = document.getElementsByClassName('form-check-input');
-        
+        const membersError = document.getElementById('task-members-error');
         let users = [];
 
         for(let i = 0; i < checkboxes.length; ++i){
@@ -113,9 +141,15 @@ const Task = ({ task, index }) => {
                 users.push(usernames[i]);
             }
         }
+
+        if(users.length === 0){
+            membersError.innerText = 'Please add members to this task'
+        } else {
+            membersError.innerText = '';
+        }
         
         if(!taskTitle || !taskDescription || !deadline || users.length === 0 || date.getTime() < todayDate.getTime()){
-            handleClose();
+         //   handleClose();
             return;
         }
         
