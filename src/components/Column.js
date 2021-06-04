@@ -1,17 +1,15 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import Styled from 'styled-components'
 import Task from './Task'
 import { Droppable } from 'react-beautiful-dnd'
 import CreateTaskModal from './CreateTaskModal'
-import { Modal, Button } from 'react-bootstrap'
-import TasksContext from '../Contexts/TasksContext/TasksContext'
 import '../ModalStyle.css'
 
 const Container = Styled.div`
     margin: 8px;
     border: 1px solid lightgrey;
     border-radius: 7px;
-    width: 330px;
+    width: 325px;
     display: flex;
     flex-direction: column;
     background-color: rgb(238, 238, 238);
@@ -62,56 +60,12 @@ const InnerList = React.memo(({ tasks }) => {
     })
 })
 
-const usernames = ['Abdullah Baher', 'Salah Mostafa', 'Shehab Khalid', 'Ahmed Salama', 'Mohamed Hatem', 'Ali Adel'];
 
 const Column = ({ column, tasks }) => {
     
-    const tasksContext = useContext(TasksContext);
     const [ showModal, setShowModal ] = useState(false)
     
     const handleShow = () => setShowModal(true);
-    const handleClose = () => setShowModal(false);
-
-    const saveTask = () => {
-
-        const tasktitle = document.getElementById('task-title').value.trim();
-        const taskdescription = document.getElementById('task-description').value.trim();
-
-        const checkboxes = document.getElementsByClassName('form-check-input');
-
-        const deadline = document.getElementById('deadline').value.trim();
-        const selectedDate = new Date(deadline);
-        
-        let users = [];
-
-        for(let i = 0; i < checkboxes.length; ++i){
-            const val = checkboxes[i];
-            if(val.checked){
-                users.push(usernames[i]);
-            }
-        }
-
-        selectedDate.setHours(0, 0, 0, 0);
-        const todayDate = new Date();
-        todayDate.setHours(0, 0, 0, 0);
-
-        if(!tasktitle || !taskdescription || users.length === 0 || !deadline || selectedDate.getTime() < todayDate.getTime()){
-            handleClose();
-            return
-        }
-        const task = {
-            'title': tasktitle,
-            'description': taskdescription,
-            'deadline': selectedDate,
-            'users': users,
-            'status': column.title
-        }
-
-        
-        tasksContext.addNewTask(column.id, task);
-        handleClose();
-    }
-
     
     return (
         <ColumnContainer>
@@ -119,30 +73,8 @@ const Column = ({ column, tasks }) => {
 
                 <ColumnHeaderContainer>
                     <Title>{column.title}</Title>
+                    <CreateTaskModal setShowModal={setShowModal} showModal={showModal} col={column} />
                     <Btn onClick={handleShow}>+</Btn>
-
-                    <Modal show={showModal} onHide={handleClose} size='xl' scrollable centered>
-                        
-                        <Modal.Header closeButton>
-                        <Modal.Title><strong>New Task</strong></Modal.Title>
-                        </Modal.Header>
-
-                        <Modal.Body>
-                            <CreateTaskModal />
-                        </Modal.Body>
-
-                        <Modal.Footer>
-                            
-                            <Button variant="secondary" onClick={handleClose}>
-                                Cancel
-                            </Button>
-
-                            <Button variant="primary" onClick={saveTask}>
-                                Save Task
-                            </Button>
-
-                        </Modal.Footer>
-                    </Modal>
                 </ColumnHeaderContainer>
 
                 <Droppable droppableId={column.id}>

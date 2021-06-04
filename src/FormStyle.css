@@ -1,0 +1,32 @@
+.form-title {
+    color: white;
+    font-size: 40px;
+    text-align: center;
+    display: block;
+}
+
+.form-label-text {
+    font-size: 20px;
+    color: white;
+}
+
+.form-error-text {
+    color: red;
+    font-size: 18px;
+    margin-top: 15px;
+}
+
+.form-goto-register {
+    cursor: pointer;
+    color: lightgrey;
+    font-size: 18px;
+}
+
+a:hover {
+    color: lightgrey;
+}
+
+.form-btn {
+    min-width: 100%;
+    display: block;
+}

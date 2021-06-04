@@ -1,13 +1,21 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import Column from './Column'
 import { DragDropContext } from 'react-beautiful-dnd'
 import { CardDeck } from 'react-bootstrap'
+import ProjectsContext from '../Contexts/ProjectsContext/ProjectsContext'
 import TasksContext from '../Contexts/TasksContext/TasksContext'
 
 const TrelloPage = () => {
 
     const tasksContext = useContext(TasksContext);
+    const projectContext = useContext(ProjectsContext);
     
+
+    useEffect(() => {
+        tasksContext.initData();
+    },[projectContext.selectedProject])
+    
+
     const onDragEnd = result => {
         const { destination, source , draggableId } = result
         
@@ -81,9 +89,11 @@ const InnerList = React.memo(({ column, taskMap, index }) => {
     return <Column key={column.id} column={column} tasks={tasks} index={index} />
 })
     return (
-        <DragDropContext onDragEnd={onDragEnd}>
-            <CardDeck style={{margin: '0'}}>
-                {tasksContext.state.columnOrder.map(columnId => {
+        <DragDropContext  onDragEnd={onDragEnd}>
+            <CardDeck  style={{margin: '0'}}>
+            {
+                tasksContext.state.columnOrder ?
+                tasksContext.state.columnOrder.map(columnId => {
                     const column = tasksContext.state.columns[columnId]
                     
 
@@ -91,8 +101,8 @@ const InnerList = React.memo(({ column, taskMap, index }) => {
                     key={column.id}
                     column={column} 
                     taskMap={tasksContext.state.tasks} 
-                    />
-                })}
+                />}) : null
+            }
             </CardDeck>
         </DragDropContext>
     )

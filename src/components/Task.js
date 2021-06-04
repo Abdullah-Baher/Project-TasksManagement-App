@@ -1,11 +1,10 @@
-import {React, useContext, useState} from 'react'
+import {React, useState} from 'react'
 import Styled from 'styled-components'
 import { Draggable } from 'react-beautiful-dnd'
-import { Card, Modal, Button } from 'react-bootstrap'
+import { Card } from 'react-bootstrap'
 import { AiOutlineEllipsis } from 'react-icons/ai'
 import { BiCommentDetail } from 'react-icons/bi'
 import DisplayTaskModal from './DisplayTaskModal'
-import TasksContext from '../Contexts/TasksContext/TasksContext'
 import TaskCommentsModal from './TaskCommentsModal'
 import '../ModalStyle.css'
 import '../TaskStyle.css'
@@ -73,65 +72,16 @@ const UsersContainer = Styled.div`
     flex-direction: row-reverse;
     flex-wrap: wrap;
 `
-const usernames = ['Abdullah Baher', 'Salah Mostafa', 'Shehab Khalid', 'Ahmed Salama', 'Mohamed Hatem', 'Ali Adel'];
 
 const Task = ({ task, index }) => {
-    const tasksContext = useContext(TasksContext);
 
     const [ showModal, setShowModal ] = useState(false)
     
     const handleShow = () => setShowModal(true);
-    const handleClose = () => setShowModal(false);
     
     const [ showCommentsModal, setShowCommentsModal ] = useState(false);
 
     const handleCommentsShow = () => setShowCommentsModal(true);
-    const handleCommentsClose = () => setShowCommentsModal(false);
-
-    const deleteTaskClick = (taskId) => {
-        tasksContext.deleteTask(taskId);
-        handleClose();
-    }
-
-    const saveTaskChangesClick = () => {
-        const taskTitle = document.getElementById('task-title').value.trim();
-        const taskDescription = document.getElementById('task-description').value.trim();
-        const deadline = document.getElementById('deadline').value.trim();
-        
-        const date = new Date(deadline);
-        date.setHours(0, 0, 0, 0);
-        const todayDate = new Date();
-        todayDate.setHours(0, 0, 0, 0);
-
-        const checkboxes = document.getElementsByClassName('form-check-input');
-        
-        let users = [];
-
-        for(let i = 0; i < checkboxes.length; ++i){
-            const val = checkboxes[i];
-            if(val.checked){
-                users.push(usernames[i]);
-            }
-        }
-        
-        if(!taskTitle || !taskDescription || !deadline || users.length === 0 || date.getTime() < todayDate.getTime()){
-            handleClose();
-            return;
-        }
-        
-        const modifiedTask = {
-            id: task.id,
-            title: taskTitle,
-            description: taskDescription,
-            deadline: date,
-            users: users,
-            status: task.status,
-            comments: tasksContext.state.tasks[task.id].comments
-        }
-
-        tasksContext.modifyTask(modifiedTask);
-        handleClose();
-    }
     
     return (
         <Draggable draggableId={task.id} index={index}>
@@ -151,28 +101,7 @@ const Task = ({ task, index }) => {
                                 <DetailsButton onClick={() => handleShow()}>
                                     <OptionsBtn />
                                 </DetailsButton>
-
-                                <Modal show={showModal} onHide={handleClose} scrollable centered>
-                                    <Modal.Header closeButton>
-                                        <Modal.Title><strong>{task.title}</strong></Modal.Title>
-                                    </Modal.Header>
-                                    
-                                    <Modal.Body>
-                                        <DisplayTaskModal task={task} />    
-                                    </Modal.Body>
-
-                                    <Modal.Footer>
-                                        <Button variant="secondary" onClick={handleClose}>
-                                            Cancel
-                                        </Button>
-                                        <Button variant="danger" onClick={() => deleteTaskClick(task.id)}>
-                                            Delete Task
-                                        </Button>
-                                        <Button variant="primary" onClick={saveTaskChangesClick}>
-                                            Save Changes
-                                        </Button>
-                                    </Modal.Footer>
-                                </Modal>
+                                <DisplayTaskModal task={task} showModal={showModal} setShowModal={setShowModal} />
 
                             </CardTitleContainer>
                         </Card.Title>
@@ -189,25 +118,7 @@ const Task = ({ task, index }) => {
                             <CommentsBtn />
                         </DetailsButton>
 
-                        <Modal show={showCommentsModal} onHide={handleCommentsClose} scrollable centered>
-                            
-                            <Modal.Header closeButton>
-                                <Modal.Title>
-                                    <strong>{ task.title + ' Comments' }</strong>
-                                </Modal.Title>
-                            </Modal.Header>
-
-                            <Modal.Body>
-                                <TaskCommentsModal taskId={task.id} />
-                            </Modal.Body>
-
-                            <Modal.Footer>
-                                <Button variant="secondary" onClick={handleCommentsClose}>
-                                    Close
-                                </Button>
-                            </Modal.Footer>
-                            
-                        </Modal>
+                        <TaskCommentsModal task={task} showCommentsModal={showCommentsModal} setShowCommentsModal={setShowCommentsModal} />
 
                         <UsersContainer>
                         {

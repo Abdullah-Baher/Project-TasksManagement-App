@@ -1,11 +1,22 @@
-import {React, useState} from 'react'
+import {React, useContext, useState} from 'react'
 import TasksContext from './TasksContext'
-import initialData from '../../initial-data'
+import ProjectsContext from '../ProjectsContext/ProjectsContext'
+
 
 const TasksContextState = props => {
-    const [ state, setState ] = useState(initialData);
+    const projectsContext = useContext(ProjectsContext);
 
-    const saveTasks = (tasks) => setState(tasks);
+    const [ state, setState ] = useState({});
+
+    const clearData = () => setState({});
+
+    const initData = () => setState(projectsContext.getSelectedProjectData())
+
+    const saveTasks = (Data) => {
+        projectsContext.updateProject(Data);
+        setState({ ...Data });
+    }
+
     
     const addNewTask = (columnId, task) => {
         const numOfTasks = Object.keys(state.tasks).length + 1;
@@ -61,7 +72,7 @@ const TasksContextState = props => {
     }
 
     return (
-        <TasksContext.Provider value={{state, saveTasks, addNewTask, deleteTask, modifyTask}}>
+        <TasksContext.Provider value={{state, saveTasks, addNewTask, deleteTask, modifyTask, clearData, initData}}>
             {props.children}
         </TasksContext.Provider>
     )
