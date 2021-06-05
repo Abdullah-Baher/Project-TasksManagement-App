@@ -13,7 +13,7 @@ const AppNavbar = () => {
     const getNavLinkText = () =>{
         
         if(location.pathname === "/" || location.pathname === "/login"){
-            return "SignUp";
+            return "Sign Up";
         }
         
         else if(location.pathname === "/home"){
@@ -22,12 +22,12 @@ const AppNavbar = () => {
             }
             
             else {
-                return "SignIn"
+                return "Sign In"
             }
         }
         
         else if(location.pathname === "/register"){
-            return "SignIn"
+            return "Sign In"
         }
         
         else {
@@ -40,7 +40,7 @@ const AppNavbar = () => {
 
     const SignInClick = () => {
         const text = getNavLinkText();
-        if(text === "SignUp") {
+        if(text === "Sign Up") {
             history.push('/register');
         }
 

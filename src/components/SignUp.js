@@ -41,7 +41,7 @@ const SignUp = () => {
 
     return(
         <Container className="col-11 col-lg-5 p-5 rounded" style={{backgroundColor: 'rgb(55, 58, 64)'}}>
-            <Form.Label className="form-title">SignUp</Form.Label>
+            <Form.Label className="form-title">Sign Up</Form.Label>
             <Form style={{flexGrow: '1'}} onSubmit={(e) => e.preventDefault()}>
             <Form.Group style={{marginBottom: '20px'}} controlId="basicUsername">
                     <Form.Label className="form-label-text">Username</Form.Label>

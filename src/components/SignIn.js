@@ -40,7 +40,7 @@ const SignIn = () => {
     return(
         <Container className="col-11 col-lg-5 p-5 rounded" style={{backgroundColor: 'rgb(55, 58, 64)'}}>
 
-            <Form.Label className="form-title">SignIn</Form.Label>
+            <Form.Label className="form-title">Sign In</Form.Label>
 
             <Form style={{flexGrow: '1'}} onSubmit={(e) => e.preventDefault()}>
 

@@ -9,11 +9,13 @@ const ProjectsContextState = props => {
     const [ projects, setProjects ] = useState({ FCIS: {...initialData, members: FCIS_MEMBERS} });
     const [ selectedProject, setSelectedProject ] = useState('');
 
+
     const createProject = (projectName, members) => {
         setProjects({...projects, [projectName]: { ...initialDataNewProject, members: members }});
         setSelectedProject(projectName);
     }
 
+    
     const openProject = (projectName) => setSelectedProject(projectName);
 
     const clearData = () => {
